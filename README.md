@@ -8,6 +8,7 @@ I am heavily relying on these resources:
 As well as the appropriate datasheets, courtesy of STM.
 
 # Features
+- [ ] Add a Makefile or build system for this
 - [ ] GPIO configuration functions
 - [ ] I2C functionality
 - [ ] SPI functionality
