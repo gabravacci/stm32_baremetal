@@ -8,7 +8,7 @@ I am heavily relying on these resources:
 As well as the appropriate datasheets, courtesy of STM.
 
 # Features
-- [ ] Add a Makefile or build system for this
+- [x] Add a Makefile or build system for this
 - [ ] GPIO configuration functions
 - [ ] I2C functionality
 - [ ] SPI functionality
@@ -26,7 +26,7 @@ arm-none-eabi-gcc -o main.o -c -g -mcpu=cortex-m3 -mthumb main.c
 ```
 Linker script arranges instructions in required memory configuration for device:
 ```
-arm-none-eabi-gcc -o application.elf -Wl,-Tmemory.ld -nostartfiles main.o
+arm-none-eabi-gcc -o application.elf -Wl,-Tlink.ld -nostartfiles main.o
 ```
 Finally need to compile `.elf` to actual binary that can be loaded to the FLASH memory:
 ```
