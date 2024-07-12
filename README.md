@@ -1,4 +1,21 @@
-# Explanation
+This is a personal project for *learning* purposes. The goal is to implement a convenient and compact HAL for the STM32f103c8t6 microcontroller in the 'blue pill' package format (which I use very often).
+
+I am heavily relying on these resources:
+
+- https://github.com/cpq/bare-metal-programming-guide?tab=readme-ov-file
+- https://maldus512.medium.com/bare-metal-programming-on-an-stm32f103-3a0f4e50ca29
+
+As well as the appropriate datasheets, courtesy of STM.
+
+# Features
+- [ ] GPIO configuration functions
+- [ ] I2C functionality
+- [ ] SPI functionality
+- [ ] Drivers for common devices I use
+    - [ ] LCD display driver
+    - [ ] OLED (I2C) display driver
+    - [ ] PWM pin driver
+    - [ ] Accelerometer driver
 
 # Compilation:
 
