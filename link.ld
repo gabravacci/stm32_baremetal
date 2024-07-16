@@ -1,28 +1,52 @@
+/* this serves as an entry point for debuggers which use the .ELF header */
+ENTRY(_reset);
+
 MEMORY
 {
-	FLASH (rx)  : ORIGIN = 0x08000000, LENGTH = 64K
-	RAM   (rwx) : ORIGIN = 0x20000000, LENGTH = 20K
+  flash(rx)  : ORIGIN = 0x08000000, LENGTH = 64k
+  sram(rwx)  : ORIGIN = 0x20000000, LENGTH = 20k
 }
 
-_reset_stack_pointer = ORIGIN(RAM) + LENGTH(RAM);
+_estack     = ORIGIN(sram) + LENGTH(sram);    /* stack points to end of SRAM */
 
-/* specifies binary layout 
-*	a dot (.) specifies the current address
-*	so . = 0 puts us at the beginningo of the section
-*	data from PM0056 programming manual
+/*
+* SECTIONS defines output sections and their order in th .ELF file
+* An important distinction must be made here between VMA and LMA.
+*
+* VMA is where the _program_ expects to find the section at _runtime_. The VM Address is what is
+* used by pointers, the program counter, etc. 
+*
+* LMA is where the _loader_ must place the code. These often coincide but not necessarily.
 */
-SECTIONS
+SECTIONS 
 {
-	.text : {
-		/* this puts us at the beginning of the instrs. (.text)section */
-		. = 0;
-		LONG(_reset_stack_pointer);
-		/* we put the address of the main function here */
-		LONG(main | 1);
-		/* interrupt table is 67 interrupt vectors from 0x40 increasing
-		   in steps of 4 (0x40 = d64 + 67x4 = 332 */
-		. = 332;
-		 /* rest of the code goes here? */
-		*(.text*)
-	} > FLASH = 0xFF
+  /* we're loading all of this to (physical) flash memory first */
+  .vectors  : { KEEP(*(.vectors)) }   > flash
+  .text     : { *(.text*) }           > flash
+  .rodata   : { *(.rodata*) }         > flash
+
+  .data :
+  {
+    /*
+    * "wild card" operator "*(.x)" means "use the .x section of all files"
+    * similarly, ".y*" means use  all files starting with "y"
+    * so "*(.text*)" includes ".text.foo", ".text.bar" and so on
+    */
+    _sdata = .;  /* "." := current location, so in C "_sdata" will be a pointer to here! */
+    *(.first_data)
+    *(.data SORT(.data.*))
+    _edata = .;
+    /* (vma) AT > (lma) [???] */
+  } > sram AT > flash
+  /* "LOADADDR" returns the LMA (duh) of the passed section */
+  _sidata = LOADADDR(.data);
+
+  .bss : {
+    _sbss = .;              /* .bss section start */
+    *(.bss SORT(.bss.*) COMMON)
+    _ebss = .;              /* .bss section end */
+  } > sram
+
+  . = ALIGN(8);
+  _end = .;     /* for cmsis_gcc.h  [???] */
 }

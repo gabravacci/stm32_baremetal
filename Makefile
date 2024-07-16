@@ -18,3 +18,4 @@ flash: firmware.bin
 
 clean:
 	rm -rf firmware.*	
+	rm main.o

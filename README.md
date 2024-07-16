@@ -19,6 +19,15 @@ As well as the appropriate datasheets, courtesy of STM.
     - [ ] Accelerometer driver
 
 # Compilation:
+This has been moved to the Makefile. Now simply call:
+```
+make flash
+```
+Note this compiles *and* flashes. To simply build the binary/ELF:
+```
+make firmware.elf
+make firmware.bin
+```
 
 First compile to ARM (actually Thumb) instructions:
 ```
